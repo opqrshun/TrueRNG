@@ -118,6 +118,10 @@ print('==================================================')
 # Change to above mode (only has effect on the TrueRNGpro and TrueRNGproV2)
 modeChange(capture_mode, rng_com_port)
 
+# ファイル出力先ディレクトリ
+outputDir = "output"
+os.makedirs(outputDir, exist_ok=True)
+
 
 # Try to setup and open the comport
 try:
@@ -145,7 +149,7 @@ for _ in range(numloops):
     timestamp = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
 
     # Open/create the file random.bin in the current directory with 'write binary'
-    fp=open(f"{timestamp}.txt",'wb')
+    fp=open(f"{outputDir}/{timestamp}.txt",'wb')
 
     # Print an error if we can't open the file
     if fp==None:
