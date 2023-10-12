@@ -118,9 +118,30 @@ print('==================================================')
 # Change to above mode (only has effect on the TrueRNGpro and TrueRNGproV2)
 modeChange(capture_mode, rng_com_port)
 
+
 # ファイル出力先ディレクトリ
 outputDir = "output"
 os.makedirs(outputDir, exist_ok=True)
+
+# bytesをファイルに書き込み
+def writeFile(x):
+    timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+
+    # Open/create the file random.bin in the current directory with 'write binary'
+    fp=open(f"{outputDir}/{timestamp}.bin",'wb')
+
+    # Print an error if we can't open the file
+    if fp==None:
+        print('Error Opening File!')
+        return
+
+    # If we were able to open the file, write to disk
+    if fp !=0:
+        fp.write(x)
+
+    # If the file is open then close it
+    if fp != 0:
+        fp.close()
 
 
 # Try to setup and open the comport
@@ -143,25 +164,6 @@ ser.flushInput()
 # Keep track of total bytes read
 totalbytes=0
 
-
-def writeFile(x):
-    timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-
-    # Open/create the file random.bin in the current directory with 'write binary'
-    fp=open(f"{outputDir}/{timestamp}.bin",'wb')
-
-    # Print an error if we can't open the file
-    if fp==None:
-        print('Error Opening File!')
-        return
-
-    # If we were able to open the file, write to disk
-    if fp !=0:
-        fp.write(x)
-
-    # If the file is open then close it
-    if fp != 0:
-        fp.close()
 
 # Loop
 for _ in range(numloops):
