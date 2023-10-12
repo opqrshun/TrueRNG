@@ -145,11 +145,11 @@ totalbytes=0
 
 # Loop
 for _ in range(numloops):
-    # タイムスタンプを記録（ISO 8601形式）
-    timestamp = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
+
+    timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 
     # Open/create the file random.bin in the current directory with 'write binary'
-    fp=open(f"{outputDir}/{timestamp}.txt",'wb')
+    fp=open(f"{outputDir}/{timestamp}.bin",'wb')
 
     # Print an error if we can't open the file
     if fp==None:
