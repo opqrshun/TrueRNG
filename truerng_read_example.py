@@ -143,9 +143,8 @@ ser.flushInput()
 # Keep track of total bytes read
 totalbytes=0
 
-# Loop
-for _ in range(numloops):
 
+def writeFile(x):
     timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 
     # Open/create the file random.bin in the current directory with 'write binary'
@@ -154,9 +153,18 @@ for _ in range(numloops):
     # Print an error if we can't open the file
     if fp==None:
         print('Error Opening File!')
-        continue
+        return
 
+    # If we were able to open the file, write to disk
+    if fp !=0:
+        fp.write(x)
 
+    # If the file is open then close it
+    if fp != 0:
+        fp.close()
+
+# Loop
+for _ in range(numloops):
 
     # Try to read the port and record the time before and after
     try:
@@ -170,13 +178,7 @@ for _ in range(numloops):
     # Update total bytes read
     totalbytes +=len(x)
 
-    # If we were able to open the file, write to disk
-    if fp !=0:
-        fp.write(x)
-
-    # If the file is open then close it
-    if fp != 0:
-        fp.close()
+    writeFile(x)
 
     # Calculate the rate
     rate=float(blocksize) / ((after-before)*1000000.0) *8
