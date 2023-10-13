@@ -15,12 +15,13 @@ import serial
 import time
 import os
 from serial.tools import list_ports
+from datetime import datetime
 
 # Size of block for each loop
 blocksize=102400
 
 # Number of loops
-numloops=10
+numloops=2000
 
 # Set com port to default None
 # Set this to the exact port name if you want to choose a specific port
@@ -117,12 +118,31 @@ print('==================================================')
 # Change to above mode (only has effect on the TrueRNGpro and TrueRNGproV2)
 modeChange(capture_mode, rng_com_port)
 
-# Open/create the file random.bin in the current directory with 'write binary'
-fp=open('random.bin','wb')
 
-# Print an error if we can't open the file
-if fp==None:
-    print('Error Opening File!')
+# ファイル出力先ディレクトリ
+outputDir = "output"
+os.makedirs(outputDir, exist_ok=True)
+
+# bytesをファイルに書き込み
+def writeFile(x):
+    timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+
+    # Open/create the file random.bin in the current directory with 'write binary'
+    fp=open(f"{outputDir}/{timestamp}.bin",'wb')
+
+    # Print an error if we can't open the file
+    if fp==None:
+        print('Error Opening File!')
+        return
+
+    # If we were able to open the file, write to disk
+    if fp !=0:
+        fp.write(x)
+
+    # If the file is open then close it
+    if fp != 0:
+        fp.close()
+
 
 # Try to setup and open the comport
 try:
@@ -144,6 +164,7 @@ ser.flushInput()
 # Keep track of total bytes read
 totalbytes=0
 
+
 # Loop
 for _ in range(numloops):
 
@@ -159,9 +180,7 @@ for _ in range(numloops):
     # Update total bytes read
     totalbytes +=len(x)
 
-    # If we were able to open the file, write to disk
-    if fp !=0:
-        fp.write(x)
+    writeFile(x)
 
     # Calculate the rate
     rate=float(blocksize) / ((after-before)*1000000.0) *8
@@ -171,9 +190,6 @@ for _ in range(numloops):
 # Close the serial port
 ser.close()
 
-# If the file is open then close it
-if fp != 0:
-    fp.close()
 
 # If we're on Linux set min on com port back to 1
 # Pyserial screws this up
